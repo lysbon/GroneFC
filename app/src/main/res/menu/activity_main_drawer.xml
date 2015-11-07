@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <!--
+        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_menu_camera"
+            android:title="" />
+        -->
+        <item android:id="@+id/nav_fixture" android:icon="@android:drawable/ic_menu_my_calendar"
+            android:title="" />
+        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
+            android:title="" />
+        <item android:id="@+id/nav_map" android:icon="@android:drawable/ic_menu_mylocation"
+            android:title="" />
+        <item android:id="@+id/nav_play" android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="" />
+        <item android:id="@+id/nav_twitter" android:icon="@drawable/twitter_257"
+            android:title="" />
+        <item android:id="@+id/nav_twitter2" android:icon="@drawable/twitter_257"
+            android:title="" />
+        <!--
+        <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"
+            android:title="" />
+        <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
+            android:title="" />
+        -->
+
+    </group>
+    <!--
+    <item android:title="">
+        <menu>
+            <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
+                android:title="" />
+            <item android:id="@+id/nav_send" android:icon="@android:drawable/ic_menu_send"
+                android:title="" />
+        </menu>
+    </item>
+    -->
+</menu>
