@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.lysbon.gronefc.R;
 import com.lysbon.gronefc.frags.dummy.DummyContent;
+import com.lysbon.gronefc.rest.Team;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterException;
@@ -37,12 +38,10 @@ public class TweetCookieFragment extends Fragment implements AbsListView.OnItemC
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM1 = "pTeam";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Team mTeam;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,11 +57,10 @@ public class TweetCookieFragment extends Fragment implements AbsListView.OnItemC
     private ListAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
-    public static TweetCookieFragment newInstance(String param1, String param2) {
+    public static TweetCookieFragment newInstance(Team team) {
         TweetCookieFragment fragment = new TweetCookieFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putParcelable(ARG_PARAM1, team);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,19 +77,17 @@ public class TweetCookieFragment extends Fragment implements AbsListView.OnItemC
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mTeam = getArguments().getParcelable(ARG_PARAM1);
         }
 
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
 
-
         // TODO: Use a more specific parent
         final ViewGroup parentView = (ViewGroup) getActivity().getWindow().getDecorView().getRootView();
         // TODO: Base this Tweet ID on some data from elsewhere in your app
-        long tweetId = 631879971628183552L;
+        long tweetId = 663729700355883008L;
         TweetUtils.loadTweet(tweetId, new Callback<Tweet>() {
             @Override
             public void success(Result<Tweet> result) {
@@ -103,6 +99,8 @@ public class TweetCookieFragment extends Fragment implements AbsListView.OnItemC
                 Log.d("TwitterKit", "Load Tweet failure", exception);
             }
         });
+
+
 
     }
 
@@ -172,7 +170,7 @@ public class TweetCookieFragment extends Fragment implements AbsListView.OnItemC
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        void onFragmentInteraction(String id);
     }
 
 }

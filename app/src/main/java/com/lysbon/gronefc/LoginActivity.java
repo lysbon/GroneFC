@@ -32,6 +32,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lysbon.gronefc.rest.Team;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -40,8 +41,17 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -67,6 +77,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
+    private HttpRequestTask mRequestTask = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -124,14 +135,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 Log.d("TwitterKit", "Login with Twitter failure", exception);
             }
         });
-
     }
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
         }
-
         getLoaderManager().initLoader(0, null, this);
     }
 
@@ -170,7 +179,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-
     /**
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
@@ -193,7 +201,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        /*
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
@@ -209,7 +216,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
             cancel = true;
-        }*/
+        }
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -367,15 +374,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success) {
-                finish();
+                mRequestTask = new HttpRequestTask();
+                mRequestTask.execute();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
-
-            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-            startActivity(intent);
-
         }
 
         @Override
@@ -384,6 +388,48 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
         }
     }
+
+    private class HttpRequestTask extends AsyncTask<Void, Void, Team> {
+        @Override
+        protected Team doInBackground(Void... params) {
+            try {
+                //showProgress(true);
+
+                final String url = "http://fierce-thicket-3802.herokuapp.com/teams/teamlist";
+
+                HttpHeaders requestHeaders = new HttpHeaders();
+                requestHeaders.setAccept(Collections.singletonList(new MediaType("application", "json")));
+                HttpEntity<?> requestEntity = new HttpEntity<Object>(requestHeaders);
+
+                // Create a new RestTemplate instance
+                RestTemplate restTemplate = new RestTemplate();
+
+                // Add the Gson message converter
+                restTemplate.getMessageConverters().add(new GsonHttpMessageConverter());
+
+                // Make the HTTP GET request, marshaling the response from JSON to an array of Events
+                ResponseEntity<Team[]> responseEntity = restTemplate.exchange(url, HttpMethod.GET, requestEntity, Team[].class);
+                Team[] teams = responseEntity.getBody();
+                if(teams.length>0)
+                    return teams[0];
+
+            } catch (Exception e) {
+                Log.e("MainActivity", e.getMessage(), e);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Team team) {
+            mRequestTask = null;
+            //showProgress(false);
+            finish();
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.putExtra("team",team);
+            startActivity(intent);
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,15 +17,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.lysbon.gronefc.adapter.SolventRecyclerViewAdapter;
-import com.lysbon.gronefc.ents.ItemObjects;
 import com.lysbon.gronefc.frags.FixtureFragment;
 import com.lysbon.gronefc.frags.GalleryFragment;
 import com.lysbon.gronefc.frags.TweetCookieFragment;
 import com.lysbon.gronefc.frags.TweetListFragment;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.lysbon.gronefc.rest.Team;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -36,10 +30,18 @@ public class MainActivity extends AppCompatActivity
         FixtureFragment.OnFragmentInteractionListener,
         GalleryFragment.OnFragmentInteractionListener{
 
+    private Team data;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent myIntent = getIntent();
+        data = myIntent.getParcelableExtra("team");
+
         setContentView(R.layout.activity_main);
+
+        this.setTitle(data.getFullname());
 
         cargarFixture();
 
@@ -63,6 +65,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
     }
 
     @Override
@@ -110,15 +115,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void cargarMedios(){
-        String movieurl = "rtsp://cdn2.ujjina.com/ipradioalianzalima/livealianzalimaradio";
-        if (movieurl.startsWith("rtsp://")) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(movieurl));
+        String radioUrl = data.getRadioUrl();
+        if (radioUrl.startsWith("rtsp://")) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(radioUrl));
             startActivity(intent);
         }
     }
 
     public void cargarTweets2(){
-        Fragment fragment = new TweetCookieFragment();
+        Fragment fragment = TweetCookieFragment.newInstance(data);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.contentDrawer, fragment).commit();
     }
@@ -174,4 +179,5 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+
 }
