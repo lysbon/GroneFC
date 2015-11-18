@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
 
-
     <!-- Colored rectangle-->
     <item>
         <shape android:shape="rectangle">
             <size
-                android:width="40dp"
-                android:height="100dp" />
+                android:width="120dp"
+                android:height="40dp" />
             <solid android:color="@color/colorGray" />
         </shape>
     </item>
@@ -16,21 +15,22 @@
     <!-- Its color should be the same as layout's background -->
     <item
         android:right="50dp"
-        android:left="-50dp"
-        android:top="-80dp"
-        android:bottom="-80dp">
+        android:left="-10dp"
+        android:top="-20dp"
+        android:bottom="-20dp">
         <rotate
-            android:fromDegrees="8">
+            android:fromDegrees="5">
             <shape android:shape="rectangle">
                 <solid android:color="@color/colorPurpleGray" />
             </shape>
         </rotate>
     </item>
 
-    <item>
+
+    <item
+        android:width="68dp"
+        android:height="100dp">
         <bitmap
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:alpha="0.5"
             android:src="@drawable/g3062" />
     </item>

@@ -7,4 +7,7 @@
     <color name="colorBlueGray">#CED8F6</color>
     <color name="colorGray">#E6E6E6</color>
     <color name="colorLightGray">#FAFAFA</color>
+    <color name="colorPurpleGray">#9C887A</color>
+    <color name="colorTextLogin">#33CED8F6</color>
+
 </resources>
